@@ -1,0 +1,32 @@
+import heapq
+
+def prim(graph):
+    mst = []  # Árbol Parcial Mínimo
+    visited = set()
+    start_node = list(graph.keys())[0]  # Tomamos el primer nodo como punto de inicio
+
+    # Creamos una cola de prioridad para las aristas
+    edges = [(cost, start_node, neighbor) for neighbor, cost in graph[start_node]]
+    heapq.heapify(edges)
+    visited.add(start_node)
+
+    while edges:
+        cost, source, dest = heapq.heappop(edges)
+        if dest not in visited:
+            visited.add(dest)
+            mst.append((source, dest, cost))
+
+            for neighbor, cost in graph[dest]:
+                if neighbor not in visited:
+                    heapq.heappush(edges, (cost, dest, neighbor))
+
+    return mst
+
+def print_mst(mst):
+    total_cost = 0
+    for edge in mst:
+        source, dest, cost = edge
+        total_cost += cost
+        print(f"Arista: {source} - {dest}, Costo: {cost}")
+
+    print(f"Costo Total del Árbol Parcial Mínimo: {total_cost}")
