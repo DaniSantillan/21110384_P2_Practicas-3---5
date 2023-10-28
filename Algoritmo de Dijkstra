@@ -1,0 +1,40 @@
+import sys
+
+class Grafo:
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.grafo = [[0] * vertices for _ in range(vertices)]
+
+    def mostrar_solucion(self, distancias):
+        print("Distancias desde el nodo origen:")
+        for nodo in range(self.vertices):
+            print(f"Nodo {nodo}: {distancias[nodo]}")
+
+    def encontrar_nodo_menor_distancia(self, distancias, conjunto):
+        min_distancia = sys.maxsize
+
+        for v in range(self.vertices):
+            if distancias[v] < min_distancia and not conjunto[v]:
+                min_distancia = distancias[v]
+                nodo_menor_distancia = v
+
+        return nodo_menor_distancia
+
+    def dijkstra(self, nodo_origen):
+        distancias = [sys.maxsize] * self.vertices
+        distancias[nodo_origen] = 0
+        conjunto = [False] * self.vertices
+
+        for _ in range(self.vertices):
+            u = self.encontrar_nodo_menor_distancia(distancias, conjunto)
+            conjunto[u] = True
+
+            for v in range(self.vertices):
+                if (
+                    self.grafo[u][v] > 0
+                    and not conjunto[v]
+                    and distancias[v] > distancias[u] + self.grafo[u][v]
+                ):
+                    distancias[v] = distancias[u] + self.grafo[u][v]
+
+        self.mostrar_solucion(distancias)
